@@ -1,0 +1,19 @@
+Build docker:
+docker build --tag frank1chude1qian/object-cxr:11.0 .
+
+Run docker:
+docker run --gpus all -it object-cxr:10.0 /bin/bash
+
+Push to hub:
+docker push frank1chude1qian/object-cxr
+
+Online submission：
+cl run image_path.csv:image_path.csv valid_image:valid_image "python3 /workENV/src/frankNetRunner.py image_path.csv predictions_classification.csv predictions_localization.csv" -n run-predictions --request-docker frank1chude1qian/object-cxr:11.0 --request-gpus 1 --request-memory 32g
+
+After Run:
+cl make run-predictions/predictions_classification.csv  -n predictions-classification-frankNetV10.b
+cl make run-predictions/predictions_localization.csv -n predictions-localization-frankNetV10.b
+cl run valid_gt.csv:valid_gt.csv run-predictions:run-predictions program:program "python3 program/evaluate_auc.py run-predictions/predictions_classification.csv valid_gt.csv score.txt" -n score_auc --request-docker-image yww211/codalab:foreginobjv2
+cl run valid_gt.csv:valid_gt.csv run-predictions:run-predictions program:program "python3 program/evaluate_froc.py run-predictions/predictions_localization.csv valid_gt.csv score.txt" -n score_froc --request-docker-image yww211/codalab:foreginobjv2
+cl edit predictions-classification-frankNetV10.b --tags object-CXR-submit
+cl edit predictions-localization-frankNetV10.b --tags object-CXR-submit

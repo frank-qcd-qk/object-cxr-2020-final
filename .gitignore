@@ -1,0 +1,10 @@
+valid_image
+groundTruth.csv
+image_path.csv
+valid_image/
+*.jpg
+loc_out.csv
+class_out.csv
+*.csv
+*/__pycache__
+__pycache__
